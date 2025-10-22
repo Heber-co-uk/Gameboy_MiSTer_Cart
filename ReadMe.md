@@ -1,9 +1,13 @@
-# [Gameboy](https://en.wikipedia.org/wiki/Game_Boy)  / [Gameboy Color](https://en.wikipedia.org/wiki/Game_Boy_Color) port to [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki)
+# [Gameboy](https://en.wikipedia.org/wiki/Game_Boy)  / [Gameboy Color](https://en.wikipedia.org/wiki/Game_Boy_Color) port to [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki) with support for physical cartridges on Heber Multisystem2
 
-_This is a port of [Gameboy for MiST](https://github.com/mist-devel/gameboy)_
+_This is based on [Gameboy_MiSTer](https://github.com/MiSTer-devel/Gameboy_MiSTer), a port of [Gameboy for MiST](https://github.com/mist-devel/gameboy), modified to add support for physical cartridges_
 
-* Place RBF file into root of SD card.
-* Place \*.gb|*.gbc files into Gameboy folder.
+* Place RBF file into SD card.
+* Press the Menu button and set *MMS2 Cartridge* to *On* to use a physical cartridge or *Off* to use ROM files.
+* Hold down the User button when inserting or removing cartridges to ensure the bus is undriven when swapping the cartridge.
+* Place \*.gb|*.gbc files into Gameboy folder to play ROM files.
+
+_See also [our template for developing a custom core with cartridge support](https://github.com/Heber-co-uk/Template_MiSTer_Multisystem2)_
 
 ## Features
 * Original Gameboy & Gameboy Color Support
@@ -20,6 +24,7 @@ _This is a port of [Gameboy for MiST](https://github.com/mist-devel/gameboy)_
 * Cheats
 * Fast boot
 * GBA mode for GBC games
+* **Save states don't work on physical cartridges because the emulated cartridge used for ROM files has separate inputs to allow the save state engine to change the state of the mapper**
 
 ## Open Source Bootstrap roms
 Open source roms are included in the core, adapted from the SameBoy project [https://github.com/LIJI32/SameBoy/](https://github.com/LIJI32/SameBoy/). These roms have MiSTer-specific enhancements, allowing fast booting and GBA mode to be controlled by the on-screen display.

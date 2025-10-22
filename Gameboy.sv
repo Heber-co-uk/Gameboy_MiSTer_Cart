@@ -177,6 +177,10 @@ module emu
 	// Set USER_OUT to 1 to read from USER_IN.
 	input   [6:0] USER_IN,
 	output  [6:0] USER_OUT,
+	output  [6:0] USER_DIR,
+	input  [28:0] MMS_BUS_IN,
+	output [28:0] MMS_BUS_OUT,
+	output [28:0] MMS_BUS_DIR,
 
 	input         OSD_STATUS
 );
@@ -204,12 +208,13 @@ assign AUDIO_MIX = status[8:7];
 // 0         1         2         3          4         5         6
 // 01234567890123456789012345678901 23456789012345678901234567890123
 // 0123456789ABCDEFGHIJKLMNOPQRSTUV 0123456789ABCDEFGHIJKLMNOPQRSTUV
-// XXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXX
+// XXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXX
 
 `include "build_id.v" 
 localparam CONF_STR = {
 	"GAMEBOY;SS3E000000:40000;",
 	"FS1,GBCGB BIN,Load ROM;",
+	"O[44],MMS2 Cartridge,Off,On;",
 	"OEF,System,Auto,Gameboy,Gameboy Color,MegaDuck;",
 	"D7o79,Mapper,Auto,WisdomTree,Mani161,MBC1,MBC3;",
 	"-;",
@@ -344,6 +349,8 @@ wire [32:0] RTC_time;
 wire        sys_auto     = (status[15:14] == 0);
 wire        sys_gbc      = (status[15:14] == 2);
 wire        sys_megaduck = (status[15:14] == 3);
+wire real_cart = status[44];
+wire clk_cart;
 
 hps_io #(.CONF_STR(CONF_STR), .WIDE(1)) hps_io
 (
@@ -402,14 +409,84 @@ assign joystick_0 = joy0_unmod[9] ? 16'b0 : joy0_unmod;
 
 ///////////////////////////////////////////////////
 
+// Non "_fpga" signals go to/from the Gameboy CPU RTL
+// cart_addr: Address from gameboy to cart
 wire [14:0] cart_addr;
 wire [22:0] mbc_addr;
 wire cart_a15;
+// Control signals from fpga to cart
 wire cart_rd;
 wire cart_wr;
+// Data bus direction - from cart to fpga
+// It seems to mostly be high when cart_rd is high and mostly otherwise low with some occasional mapper override for the cart SRAM
 wire cart_oe;
+// cart_di: From gameboy to cart
+// cart_do: From cart to gameboy
 wire [7:0] cart_di, cart_do;
-wire nCS; // WRAM or Cart RAM CS
+wire nCS; // WRAM or Cart RAM CS (from gameboy to cart) - not used for reads/writes to main ROM
+
+// _fpga signals go to the FPGA-emulated cart
+wire [14:0] cart_addr_fpga;
+wire cart_a15_fpga;
+wire cart_rd_fpga;
+wire cart_wr_fpga;
+wire cart_oe_fpga;
+wire [7:0] cart_di_fpga, cart_do_fpga;
+wire nCS_fpga;
+wire ext_en;
+wire cart_reset;
+
+// Non-"_fpga" signals need to be routed to the "_fpga" signals if real_cart==0
+// or to the MMS2 bus if real_cart==1
+
+assign ext_en = real_cart;//(~cart_a15) | ((~cart_addr[14]) & cart_addr[13]);
+
+// Signals from gameboy to cart
+assign cart_addr_fpga = (real_cart == 0) ? cart_addr : 0;
+assign cart_a15_fpga = (real_cart == 0) ? cart_a15 : 0;
+assign cart_rd_fpga = (real_cart == 0) ? cart_rd : 0;
+assign cart_wr_fpga = (real_cart == 0) ? cart_wr : 0;
+assign cart_di_fpga = (real_cart == 0) ? cart_di : 0;
+assign nCS_fpga = (real_cart == 0) ? nCS : 0;
+
+// Signals from cart to gameboy
+assign cart_oe = (real_cart == 0) ? cart_oe_fpga : (cart_rd & ((~cart_a15) | ((~cart_addr[14]) & cart_addr[13])));
+
+assign cart_do[7:0] = (real_cart == 0) ? cart_do_fpga[7:0] : {MMS_BUS_IN[28:23], MMS_BUS_IN[21:20]};
+
+// MMS Bus assignments
+assign MMS_BUS_OUT[7:0] = cart_addr[7:0];
+assign MMS_BUS_OUT[18:12] = cart_addr[14:8];
+assign MMS_BUS_OUT[19] = cart_a15;
+assign MMS_BUS_OUT[21:20] = cart_di[1:0];
+assign MMS_BUS_OUT[22] = 0;
+assign MMS_BUS_OUT[28:23] = cart_di[7:2];
+assign MMS_BUS_OUT[8] = clk_cart;		//1ish MHz clock
+assign MMS_BUS_OUT[9] = ~(cart_wr & ext_en);
+assign MMS_BUS_OUT[10] = ~(cart_rd & ext_en);
+assign MMS_BUS_OUT[11] = nCS;
+
+assign MMS_BUS_DIR[7:0] = (real_cart & ~buttons[1]) ? 8'hff : 0;
+assign MMS_BUS_DIR[11:8] = (real_cart & ~buttons[1]) ? 4'hf : 0;
+assign MMS_BUS_DIR[19:12] = (real_cart & ~buttons[1]) ? 8'hff : 0;
+assign MMS_BUS_DIR[21:20] = (real_cart & ~buttons[1] & cart_wr & ext_en) ? 2'h3 : 0;
+assign MMS_BUS_DIR[22] = real_cart & ~buttons[1];	// OE
+assign MMS_BUS_DIR[28:23] = (real_cart & cart_wr & ext_en & ~buttons[1]) ? 6'h3f : 0;
+assign cart_reset = real_cart ? ~USER_IN[4] : 0;
+
+// Cart reset
+assign USER_DIR[4] = (real_cart & (RESET | status[0] | buttons[1])) ? 1 : 0;
+// A16-A23 direction - from cart to system except when writing
+assign USER_OUT[5] = real_cart & cart_wr & ext_en;
+assign USER_DIR[5] = 1;
+// A0-A15 direction - always from system to cart
+assign USER_OUT[6] = 1;
+assign USER_DIR[6] = 1;
+// Unused USER port pins set as inputs
+assign USER_DIR[3:0] = 4'h00;
+
+
+///////////////////////////////////////////////////
 
 wire cart_download = ioctl_download && (filetype[5:0] == 6'h01 || filetype == 8'h80);
 wire md_download = ioctl_download && (filetype == 8'h81);
@@ -525,13 +602,13 @@ cart_top cart (
 	.megaduck    ( megaduck   ),
 	.mapper_sel  ( mapper_sel ),
 
-	.cart_addr   ( cart_addr  ),
-	.cart_a15    ( cart_a15   ),
-	.cart_rd     ( cart_rd    ),
-	.cart_wr     ( cart_wr    ),
-	.cart_do     ( cart_do    ),
-	.cart_di     ( cart_di    ),
-	.cart_oe     ( cart_oe    ),
+	.cart_addr   ( cart_addr_fpga  ),
+	.cart_a15    ( cart_a15_fpga   ),
+	.cart_rd     ( cart_rd_fpga    ),
+	.cart_wr     ( cart_wr_fpga    ),
+	.cart_do     ( cart_do_fpga    ),
+	.cart_di     ( cart_di_fpga    ),
+	.cart_oe     ( cart_oe_fpga    ),
 
 	.nCS         ( nCS        ),
 
@@ -610,7 +687,7 @@ wire DMA_on;
 
 assign AUDIO_S = 1;
 
-wire reset = (RESET | status[0] | buttons[1] | cart_download | boot_download | bk_loading);
+wire reset = (RESET | status[0] | buttons[1] | cart_download | boot_download | bk_loading | cart_reset);
 wire speed;
 reg megaduck = 0;
 
@@ -909,7 +986,8 @@ speedcontrol speedcontrol
 	.ce_n        (ce_cpu_n),
 	.ce_2x       (ce_cpu2x),
 	.refresh     (sdram_refresh_force),
-	.ff_on       (ff_on)
+	.ff_on       (ff_on),
+	.clk_cart	 (clk_cart)
 );
 
 ///////////////////////////// Fast Forward Latch /////////////////////////////////
@@ -1043,9 +1121,9 @@ end
 
 assign USER_OUT[2] = 1'b1;
 assign USER_OUT[3] = 1'b1;
-assign USER_OUT[4] = 1'b1;
-assign USER_OUT[5] = 1'b1;
-assign USER_OUT[6] = 1'b1;
+assign USER_OUT[4] = 1'b0;
+assign USER_OUT[5] = 1'bZ;
+assign USER_OUT[6] = 1'bZ;
 
 wire sc_int_clock_out;
 wire ser_data_in;

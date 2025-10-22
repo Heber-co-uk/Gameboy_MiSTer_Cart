@@ -13,7 +13,7 @@ set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 
-set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Standard Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Lite Edition"
 
 set_global_assignment -name GENERATE_RBF_FILE ON
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
@@ -53,4 +53,194 @@ set_global_assignment -name SEED 1
 source sys/sys.tcl
 source sys/sys_analog.tcl
 source files.qip
+set_global_assignment -name OPTIMIZE_POWER_DURING_SYNTHESIS OFF
+set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT EXTRA
+set_location_assignment PIN_AH8 -to MMS_BUS[0]
+set_location_assignment PIN_AG8 -to MMS_BUS[1]
+set_location_assignment PIN_U13 -to MMS_BUS[2]
+set_location_assignment PIN_U14 -to MMS_BUS[3]
+set_location_assignment PIN_AG9 -to MMS_BUS[4]
+set_location_assignment PIN_AG10 -to MMS_BUS[5]
+set_location_assignment PIN_AF13 -to MMS_BUS[6]
+set_location_assignment PIN_AG13 -to MMS_BUS[7]
+set_location_assignment PIN_U9 -to MMS_BUS[8]
+set_location_assignment PIN_AD4 -to MMS_BUS[9]
+set_location_assignment PIN_V10 -to MMS_BUS[10]
+set_location_assignment PIN_AC4 -to MMS_BUS[11]
+set_location_assignment PIN_W15 -to MMS_BUS[12]
+set_location_assignment PIN_AA24 -to MMS_BUS[13]
+set_location_assignment PIN_V16 -to MMS_BUS[14]
+set_location_assignment PIN_V15 -to MMS_BUS[15]
+set_location_assignment PIN_AF26 -to MMS_BUS[16]
+set_location_assignment PIN_AE26 -to MMS_BUS[17]
+set_location_assignment PIN_Y16 -to MMS_BUS[18]
+set_location_assignment PIN_AA23 -to MMS_BUS[19]
+set_location_assignment PIN_AH17 -to MMS_BUS[20]
+set_location_assignment PIN_AH16 -to MMS_BUS[21]
+set_location_assignment PIN_AH7 -to MMS_BUS[22]
+set_location_assignment PIN_AF25 -to MMS_BUS[23]
+set_location_assignment PIN_AF23 -to MMS_BUS[24]
+set_location_assignment PIN_AD26 -to MMS_BUS[25]
+set_location_assignment PIN_AF28 -to MMS_BUS[26]
+set_location_assignment PIN_AH26 -to MMS_BUS[27]
+set_location_assignment PIN_AF27 -to MMS_BUS[28]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[28]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDIO_CMD
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[27]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDIO_CLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[26]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDIO_DAT[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[25]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDIO_DAT[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[24]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDIO_DAT[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[23]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDIO_DAT[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[22]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[21]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[20]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[19]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[18]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[17]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[16]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[15]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[14]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[13]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[12]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[11]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[10]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SD_SPI_MISO
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SD_SPI_CLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SD_SPI_MOSI
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to IO_SCL
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to IO_SDA
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDRAM_CKE
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDRAM_DQMH
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MMS_BUS[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDRAM_DQML
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[28]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDIO_CMD
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[27]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDIO_CLK
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[26]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDIO_DAT[3]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[25]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDIO_DAT[2]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[24]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDIO_DAT[1]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[23]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDIO_DAT[0]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[22]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDCD_SPDIF
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[21]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to KEY[1]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[20]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to KEY[0]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[19]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[7]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[18]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[6]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[17]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[5]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[16]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[4]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[15]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[3]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[14]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[2]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[13]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[1]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[12]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to LED[0]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[11]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to ADC_SDI
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[10]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to ADC_SCK
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[9]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to ADC_SDO
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[8]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to ADC_CONVST
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[7]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SD_SPI_MISO
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[6]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SD_SPI_CLK
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[5]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SD_SPI_MOSI
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[4]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to IO_SCL
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[3]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to IO_SDA
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[2]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDRAM_CKE
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[1]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDRAM_DQMH
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to MMS_BUS[0]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 4MA -to SDRAM_DQML
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[28]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDIO_CMD
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[27]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDIO_CLK
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[26]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDIO_DAT[3]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[25]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDIO_DAT[2]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[24]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDIO_DAT[1]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[23]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDIO_DAT[0]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[22]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDCD_SPDIF
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[21]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to KEY[1]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[20]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to KEY[0]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[19]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[7]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[18]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[6]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[17]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[5]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[16]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[4]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[15]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[3]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[14]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[2]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[13]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[1]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[12]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to LED[0]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[11]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to ADC_SDI
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[10]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to ADC_SCK
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[9]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to ADC_SDO
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[8]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to ADC_CONVST
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[7]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SD_SPI_MISO
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[6]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SD_SPI_CLK
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[5]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SD_SPI_MOSI
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[4]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to IO_SCL
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[3]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to IO_SDA
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[2]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDRAM_CKE
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[1]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDRAM_DQMH
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to MMS_BUS[0]
+set_instance_assignment -name ENABLE_BUS_HOLD_CIRCUITRY OFF -to SDRAM_DQML
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
