@@ -459,7 +459,7 @@ assign MMS_BUS_OUT[7:0] = cart_addr[7:0];
 assign MMS_BUS_OUT[18:12] = cart_addr[14:8];
 assign MMS_BUS_OUT[19] = cart_a15;
 assign MMS_BUS_OUT[21:20] = cart_di[1:0];
-assign MMS_BUS_OUT[22] = 0;
+assign MMS_BUS_OUT[22] = ~real_cart;
 assign MMS_BUS_OUT[28:23] = cart_di[7:2];
 assign MMS_BUS_OUT[8] = clk_cart;		//1ish MHz clock
 assign MMS_BUS_OUT[9] = ~(cart_wr & ext_en);
@@ -483,7 +483,7 @@ assign USER_DIR[5] = 1;
 assign USER_OUT[6] = 1;
 assign USER_DIR[6] = 1;
 // Unused USER port pins set as inputs
-assign USER_DIR[3:0] = 4'h00;
+assign USER_DIR[3:2] = 2'h00;
 
 
 ///////////////////////////////////////////////////
@@ -1134,9 +1134,11 @@ wire serial_ena = status[6];
 
 assign ser_data_in = serial_ena ? USER_IN[2] : 1'b1;
 assign USER_OUT[1] = serial_ena ? ser_data_out : 1'b1;
+assign USER_DIR[1] = serial_ena & ~ser_data_out;
 
 assign ser_clk_in = serial_ena ? USER_IN[0] : 1'b1;
 assign USER_OUT[0] = (serial_ena & sc_int_clock_out) ? ser_clk_out : 1'b1;
+assign USER_DIR[0] = (serial_ena & sc_int_clock_out & ~ser_clk_out);
 
 
 
