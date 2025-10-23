@@ -21,6 +21,8 @@ set_clock_groups -exclusive \
    -group [get_clocks { FPGA_CLK2_50 }] \
    -group [get_clocks { FPGA_CLK3_50 }]
 
+set_false_path -from [get_ports {MMS_BUS*}]
+set_false_path -from [get_ports {USER_IO*}]
 set_false_path -from [get_ports {KEY*}]
 set_false_path -from [get_ports {BTN_*}]
 set_false_path -to   [get_ports {LED_*}]

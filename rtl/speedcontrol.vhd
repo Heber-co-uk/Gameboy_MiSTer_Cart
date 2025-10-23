@@ -12,7 +12,8 @@ entity speedcontrol is
       pausevideo  : in  std_logic;
       ce          : out std_logic := '0';
       ce_n        : out std_logic := '0';
-      ce_2x       : out std_logic := '0'    
+      ce_2x       : out std_logic := '0' ;
+	clk_cart    : out    std_logic := '0'   
    );
 end entity;
 
@@ -20,6 +21,11 @@ architecture arch of speedcontrol is
 
    signal clkdiv      : unsigned(2 downto 0) := (others => '0'); 
      
+
+	
+	signal clkdiv_cart      : std_logic := '0';
+	signal clk_cart_buf     : std_logic := '0';
+	
    type tstate is
    (
       NORMAL,
@@ -28,6 +34,8 @@ architecture arch of speedcontrol is
    signal state : tstate := NORMAL;
 
 begin
+
+	clk_cart <= clk_cart_buf;
 
    process(clk_sys)
       variable skipclock : std_logic;
@@ -43,6 +51,10 @@ begin
          clkdiv <= clkdiv + 1;
          if (clkdiv = "000") then
             ce <= '1';
+							clkdiv_cart <= not clkdiv_cart;
+							if (clkdiv_cart = '1') then
+								clk_cart_buf <= not clk_cart_buf;
+							end if;
          end if;
          if (clkdiv = "100") then
             ce_n <= '1';

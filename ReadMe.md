@@ -1,8 +1,13 @@
 # [Gameboy](https://en.wikipedia.org/wiki/Game_Boy)  / [Gameboy Color](https://en.wikipedia.org/wiki/Game_Boy_Color) port to [MiSTer](https://github.com/MiSTer-devel/Main_MiSTer/wiki)
 
 This branch is a special version for splitscreen multiplayer.
-In case you are searching for the normal Gameboy, please go here:
-https://github.com/MiSTer-devel/Gameboy_MiSTer
+
+This version supports the use of a physical cartridge for player 1 on Heber's Multisystem2 with physical cartridge adapter. Player 2 is always loaded from a ROM file.
+
+In case you are searching for the normal Gameboy with cartridge support, please go here:
+https://github.com/Heber-co-uk/Template_MiSTer_Multisystem2
+
+Below information is taken from the [original project](https://github.com/MiSTer-devel/Gameboy_MiSTer):
 
 # HW Requirements/Features
 SDRAM addon is required.
