@@ -21,6 +21,7 @@ _See also [our template for developing a custom core with cartridge support](htt
 * Custom Palette Loading
 * Real-Time Clock Support
 * Gameboy Link Port Support - Requires USERIO adapter
+* Workboy
 * Cheats
 * Fast boot
 * GBA mode for GBC games

@@ -208,13 +208,13 @@ assign AUDIO_MIX = status[8:7];
 // 0         1         2         3          4         5         6
 // 01234567890123456789012345678901 23456789012345678901234567890123
 // 0123456789ABCDEFGHIJKLMNOPQRSTUV 0123456789ABCDEFGHIJKLMNOPQRSTUV
-// XXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXX
+// XXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXX
 
 `include "build_id.v" 
 localparam CONF_STR = {
 	"GAMEBOY;SS3E000000:40000;",
 	"FS1,GBCGB BIN,Load ROM;",
-	"O[44],MMS2 Cartridge,Off,On;",
+	"O[46],MMS2 Cartridge,Off,On;",
 	"OEF,System,Auto,Gameboy,Gameboy Color,MegaDuck;",
 	"D7o79,Mapper,Auto,WisdomTree,Mani161,MBC1,MBC3;",
 	"-;",
@@ -265,6 +265,7 @@ localparam CONF_STR = {
 	"P3,Misc.;",
 	"P3-;",
 	"P3O6,Link Port,Disabled,Enabled;",
+	"P3O[45],WorkBoy Keyboard,Off,On;",
 	"P3o6,Rumble,On,Off;",
 	"P3-;",
 	"P3OP,FastForward Sound,On,Off;",
@@ -344,12 +345,13 @@ wire        img_readonly;
 wire [63:0] img_size;
 wire [15:0] joy0_rumble;
 
+wire [64:0] RTC_bcd;
 wire [32:0] RTC_time;
 
 wire        sys_auto     = (status[15:14] == 0);
 wire        sys_gbc      = (status[15:14] == 2);
 wire        sys_megaduck = (status[15:14] == 3);
-wire real_cart = status[44];
+wire real_cart = status[46];
 wire clk_cart;
 
 hps_io #(.CONF_STR(CONF_STR), .WIDE(1)) hps_io
@@ -402,6 +404,7 @@ hps_io #(.CONF_STR(CONF_STR), .WIDE(1)) hps_io
 	.info_req(ss_info_req),
 	.info(ss_info),
 	
+	.RTC(RTC_bcd),
 	.TIMESTAMP(RTC_time)
 );
 
@@ -1130,9 +1133,22 @@ wire ser_data_in;
 wire ser_data_out;
 wire ser_clk_in;
 wire ser_clk_out;
-wire serial_ena = status[6];
+wire workboy_ena = status[45];
+wire serial_ena = status[6] & ~workboy_ena;
+wire workboy_data_out;
 
-assign ser_data_in = serial_ena ? USER_IN[2] : 1'b1;
+workboy workboy
+(
+	.clk_sys(clk_sys),
+	.reset(reset | ~workboy_ena),
+	.ps2_key(ps2_key),
+	.rtc_bcd(RTC_bcd),
+	.serial_clk_in(ser_clk_out),
+	.serial_data_in(ser_data_out),
+	.serial_data_out(workboy_data_out)
+);
+
+assign ser_data_in = workboy_ena ? workboy_data_out : (serial_ena ? USER_IN[2] : 1'b1);
 assign USER_OUT[1] = serial_ena ? ser_data_out : 1'b1;
 assign USER_DIR[1] = serial_ena & ~ser_data_out;
 
