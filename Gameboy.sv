@@ -208,7 +208,7 @@ assign AUDIO_MIX = status[8:7];
 // 0         1         2         3          4         5         6
 // 01234567890123456789012345678901 23456789012345678901234567890123
 // 0123456789ABCDEFGHIJKLMNOPQRSTUV 0123456789ABCDEFGHIJKLMNOPQRSTUV
-// XXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXX
+// XXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
 
 `include "build_id.v" 
 localparam CONF_STR = {
@@ -265,6 +265,7 @@ localparam CONF_STR = {
 	"P3,Misc.;",
 	"P3-;",
 	"P3O6,Link Port,Disabled,Enabled;",
+  "P3O[47],MMS2 Cartridge Always Powered,No,Yes",
 	"P3O[45],WorkBoy Keyboard,Off,On;",
 	"P3o6,Rumble,On,Off;",
 	"P3-;",
@@ -352,6 +353,7 @@ wire        sys_auto     = (status[15:14] == 0);
 wire        sys_gbc      = (status[15:14] == 2);
 wire        sys_megaduck = (status[15:14] == 3);
 wire real_cart = status[46];
+wire always_powered = status[47];
 wire clk_cart;
 
 hps_io #(.CONF_STR(CONF_STR), .WIDE(1)) hps_io
@@ -462,7 +464,7 @@ assign MMS_BUS_OUT[7:0] = cart_addr[7:0];
 assign MMS_BUS_OUT[18:12] = cart_addr[14:8];
 assign MMS_BUS_OUT[19] = cart_a15;
 assign MMS_BUS_OUT[21:20] = cart_di[1:0];
-assign MMS_BUS_OUT[22] = ~real_cart;
+assign MMS_BUS_OUT[22] = 0;
 assign MMS_BUS_OUT[28:23] = cart_di[7:2];
 assign MMS_BUS_OUT[8] = clk_cart;		//1ish MHz clock
 assign MMS_BUS_OUT[9] = ~(cart_wr & ext_en);
@@ -473,17 +475,18 @@ assign MMS_BUS_DIR[7:0] = (real_cart & ~buttons[1]) ? 8'hff : 0;
 assign MMS_BUS_DIR[11:8] = (real_cart & ~buttons[1]) ? 4'hf : 0;
 assign MMS_BUS_DIR[19:12] = (real_cart & ~buttons[1]) ? 8'hff : 0;
 assign MMS_BUS_DIR[21:20] = (real_cart & ~buttons[1] & cart_wr & ext_en) ? 2'h3 : 0;
-assign MMS_BUS_DIR[22] = real_cart & ~buttons[1];	// OE
+assign MMS_BUS_DIR[22] = (real_cart & ~buttons[1]) | (serial_ena & always_powered);	// OE
 assign MMS_BUS_DIR[28:23] = (real_cart & cart_wr & ext_en & ~buttons[1]) ? 6'h3f : 0;
 assign cart_reset = real_cart ? ~USER_IN[4] : 0;
 
 // Cart reset
-assign USER_DIR[4] = (real_cart & (RESET | status[0] | buttons[1])) ? 1 : 0;
+//assign USER_DIR[4] = (real_cart & (RESET | status[0] | buttons[1])) ? 1 : 0;
+assign USER_DIR[4] = (real_cart & reset_to_cart_extended) ? 1 : 0;
 // A16-A23 direction - from cart to system except when writing
 assign USER_OUT[5] = real_cart & cart_wr & ext_en;
 assign USER_DIR[5] = 1;
 // A0-A15 direction - always from system to cart
-assign USER_OUT[6] = 1;
+assign USER_OUT[6] = real_cart;
 assign USER_DIR[6] = 1;
 // Unused USER port pins set as inputs
 assign USER_DIR[3:2] = 2'h00;
@@ -691,6 +694,25 @@ wire DMA_on;
 assign AUDIO_S = 1;
 
 wire reset = (RESET | status[0] | buttons[1] | cart_download | boot_download | bk_loading | cart_reset);
+wire reset_to_cart = (RESET | status[0] | buttons[1] | cart_download | boot_download | bk_loading);
+wire reset_to_cart_extended;
+
+
+reg [9:0] reset_extend_div;
+always @(posedge clk_sys) begin
+  if (reset_to_cart) begin
+      reset_to_cart_extended = 1;
+      reset_extend_div <= 10'b0000000000;
+  end
+  else begin
+      if (reset_extend_div == 10'b1111111111) begin
+          reset_to_cart_extended = 0;
+      end
+      reset_extend_div <= reset_extend_div + 1'b1;
+  end
+end
+
+
 wire speed;
 reg megaduck = 0;
 

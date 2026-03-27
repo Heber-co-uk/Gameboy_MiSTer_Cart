@@ -9,7 +9,15 @@ _This is based on [Gameboy_MiSTer](https://github.com/MiSTer-devel/Gameboy_MiSTe
 
 _See also [our template for developing a custom core with cartridge support](https://github.com/Heber-co-uk/Template_MiSTer_Multisystem2)_
 
-## Features
+## Cartridge Features
+
+✅ Cartridge appears on CPU bus. Game runs directly from cartridge without dumping.
+✅ Cartridge SRAM accessible for working game saves.
+✅ Game Boy Camera works.
+✅ Link port works for multiplayer.
+❌ Core's save states do not work with cartridges, because the core's emulated cartridge used for ROM files has separate inputs to allow the save state engine to change the state of the mapper.
+
+## Core Features
 * Original Gameboy & Gameboy Color Support
 * Super Gameboy Support - Borders, Palettes and Multiplayer
 * MegaDuck Support
@@ -25,7 +33,6 @@ _See also [our template for developing a custom core with cartridge support](htt
 * Cheats
 * Fast boot
 * GBA mode for GBC games
-* **Save states don't work on physical cartridges because the emulated cartridge used for ROM files has separate inputs to allow the save state engine to change the state of the mapper**
 
 ## Open Source Bootstrap roms
 Open source roms are included in the core, adapted from the SameBoy project [https://github.com/LIJI32/SameBoy/](https://github.com/LIJI32/SameBoy/). These roms have MiSTer-specific enhancements, allowing fast booting and GBA mode to be controlled by the on-screen display.
